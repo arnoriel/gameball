@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+  <title>Biji Gelinding</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    /* Basic styles for buttons and overlays */
+    #pauseBtn {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      padding: 10px 20px;
+      font-size: 16px;
+      z-index: 2;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    /* Overlay styles */
+    #pauseMenu, #confirmationModal, #gameOverScreen {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: rgba(0,0,0,0.8);
+      color: #fff;
+      padding: 20px;
+      border-radius: 10px;
+      text-align: center;
+      z-index: 3;
+      display: none;
+      width: 80%;
+      max-width: 300px;
+    }
+
+    /* Button styles */
+    button {
+      margin: 10px;
+      padding: 10px 20px;
+      font-size: 16px;
+      cursor: pointer;
+      border: none;
+      border-radius: 5px;
+      background-color: #00aaff;
+      color: #fff;
+      transition: background-color 0.3s;
+      user-select: none;
+      width: 80%;
+      max-width: 200px;
+    }
+
+    button:hover {
+      background-color: #0088cc;
+    }
+
+    /* Menu Screen */
+    #menuScreen {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      text-align: center;
+      z-index: 1;
+      width: 80%;
+      max-width: 300px;
+    }
+
+    /* Ensure canvas covers the screen */
+    #gameCanvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: 0;
+    }
+  </style>
+</head>
+<body>
+  <!-- Main Menu Screen -->
+  <div id="menuScreen">
+    <h1>Biji Gelinding</h1>
+    <button id="startBtn">Start</button>
+    <button id="shopBtn">Shop</button>
+    <button id="exitBtn">Exit</button>
+  </div>
+
+  <!-- Pause Button -->
+  <button id="pauseBtn">Pause</button>
+
+  <!-- Pause Menu Overlay -->
+  <div id="pauseMenu">
+    <h2>Game Paused</h2>
+    <button id="resumeBtn">Resume</button>
+    <button id="backToMenuBtn">Back to Menu</button>
+  </div>
+
+  <!-- Confirmation Modal Overlay -->
+  <div id="confirmationModal">
+    <p>Are you sure you want to go to the menu? All progress will be discarded.</p>
+    <button id="confirmYesBtn">Yes</button>
+    <button id="confirmNoBtn">No</button>
+  </div>
+
+  <!-- Game Over Screen Overlay -->
+  <div id="gameOverScreen">
+    <h2>Game Over!</h2>
+    <p id="finalScore">Score: 0</p>
+    <p id="finalHighScore">High Score: 0</p>
+    <p id="finalCoins">Coins: 0</p>
+    <button id="restartBtn">Restart</button>
+    <button id="gameOverMenuBtn">Back to Menu</button>
+  </div>
+
+  <!-- Game Canvas -->
+  <canvas id="gameCanvas" style="display: none;"></canvas>
+
+  <!-- Game Script -->
+  <script src="script.js"></script>
+</body>
+</html>
