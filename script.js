@@ -69,6 +69,57 @@ window.onload = () => {
   });
 }
 
+// Tambahkan elemen loading screen dan progress bar ke dalam variabel
+const loadingScreen = document.getElementById('loadingScreen');
+const loadingProgress = document.getElementById('loadingProgress');
+const loadingTip = document.getElementById('loadingTip');
+
+// Daftar tips yang akan ditampilkan secara acak
+const tips = [
+  "Tip: If you're fall that's your fault",
+  "Tip: Timing your jumps is key!",
+  "Tip: If you're wanted to discuss just tell me what do you want for this game.",
+  "Tip: This game is still under Development."
+];
+
+// Fungsi untuk memulai loading screen
+function startLoadingScreen(callback) {
+  // Tampilkan loading screen
+  loadingScreen.style.display = 'flex';
+
+  // Pilih tip secara acak
+  const randomTip = tips[Math.floor(Math.random() * tips.length)];
+  loadingTip.innerText = randomTip;
+
+  // Simulasikan progres loading
+  let progress = 0;
+  const loadingInterval = setInterval(() => {
+    progress += 10; // Tambahkan progres setiap interval
+    loadingProgress.style.width = progress + '%';
+
+    if (progress >= 100) {
+      clearInterval(loadingInterval);
+      // Sembunyikan loading screen
+      loadingScreen.style.display = 'none';
+
+      // Panggil fungsi callback untuk memulai game setelah loading selesai
+      callback();
+    }
+  }, 300); // Interval setiap 300ms (3 detik total untuk 100%)
+}
+
+// Memulai game dengan loading screen saat tombol "Start" diklik
+startBtn.addEventListener('click', () => {
+  menuScreen.style.display = 'none'; // Sembunyikan menu screen
+  pauseBtn.style.display = 'block'; // Tampilkan tombol pause
+
+  // Mulai loading screen dan setelah selesai, panggil fungsi untuk memulai game
+  startLoadingScreen(() => {
+    canvas.style.display = 'block'; // Tampilkan game canvas
+    startGame(); // Mulai game setelah loading selesai
+  });
+});
+
 // Mengatur ukuran canvas
 function resizeCanvas() {
   canvas.width = window.innerWidth;
