@@ -18,6 +18,23 @@ canvas {
     text-align: center;
 }
 
+#shopScreen {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(0, 0, 0, 0.8);
+    color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+    z-index: 3;
+    display: none;
+    width: 80%;
+    max-width: 300px;
+  }
+  
+
 button {
     padding: 10px 20px;
     margin: 10px;

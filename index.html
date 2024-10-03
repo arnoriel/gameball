@@ -1,9 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
-  <title>Biji Gelinding</title>
+  <meta name="viewport"
+    content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+  <title>Biji Gelinding dan Loncat</title>
   <link rel="stylesheet" href="style.css">
   <style>
     /* Basic styles for buttons and overlays */
@@ -19,12 +21,14 @@
     }
 
     /* Overlay styles */
-    #pauseMenu, #confirmationModal, #gameOverScreen {
+    #pauseMenu,
+    #confirmationModal,
+    #gameOverScreen {
       position: fixed;
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
-      background: rgba(0,0,0,0.8);
+      background: rgba(0, 0, 0, 0.8);
       color: #fff;
       padding: 20px;
       border-radius: 10px;
@@ -74,20 +78,86 @@
       left: 0;
       z-index: 0;
     }
+
+    /* Intro Styles */
+    #intro {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 100%;
+      height: 100vh;
+      /* Full viewport height */
+      background: white;
+      position: relative;
+      /* Ensure intro items are positioned relative to this */
+    }
+
+    .intro-item {
+      opacity: 0;
+      transition: opacity 1s ease;
+      font-size: 3em;
+      text-align: center;
+      position: absolute;
+      /* Keep each intro in the center */
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .intro-item img {
+      width: 100px;
+      margin-top: 20px;
+    }
+
+    .fade-in {
+      opacity: 1 !important;
+    }
+
+    .fade-out {
+      opacity: 0 !important;
+    }
   </style>
 </head>
+
 <body>
+  <!-- Intro Screen -->
+  <div id="intro">
+    <div id="arnoriel" class="intro-item">Arnoriel</div>
+    <div id="html5" class="intro-item">
+      HTML5
+      <img src="https://upload.wikimedia.org/wikipedia/commons/6/61/HTML5_logo_and_wordmark.svg" alt="HTML5 Logo">
+    </div>
+    <div id="javascript" class="intro-item">
+      JavaScript
+      <img src="https://upload.wikimedia.org/wikipedia/commons/6/6a/JavaScript-logo.png" alt="JavaScript Logo">
+    </div>
+    <div id="chatgpt" class="intro-item">
+      ChatGPT
+      <img src="https://upload.wikimedia.org/wikipedia/commons/0/04/ChatGPT_logo.svg" alt="ChatGPT Logo">
+    </div>
+  </div>
+
   <!-- Main Menu Screen -->
-  <div id="menuScreen">
-    <h1>Biji Gelinding</h1>
+  <div id="menuScreen" style="display:none;">
+    <h1>Biji Gelinding dan Loncat</h1>
     <button id="startBtn">Start</button>
     <button id="shopBtn">Shop</button>
     <button id="exitBtn">Exit</button>
     <p>Beta Version 0.1 (Under Development)</p>
   </div>
 
+  <!-- Shop Screen Overlay -->
+  <div id="shopScreen" style="display:none;">
+    <h2>Shop</h2>
+    <p>Your Coins: <span id="shopCoins">0</span></p>
+    <button class="shopItem" data-item="jumpBoost">Jump Boost (Cost: 5 Coins)</button>
+    <button class="shopItem" data-item="extraLife">Extra Life (Cost: 10 Coins)</button>
+    <button id="backToMenuFromShopBtn">Back to Menu</button>
+  </div>
+
   <!-- Pause Button -->
-  <button id="pauseBtn">Pause</button>
+  <button id="pauseBtn" style="display: none;">Pause</button>
 
   <!-- Pause Menu Overlay -->
   <div id="pauseMenu">
@@ -113,10 +183,37 @@
     <button id="gameOverMenuBtn">Back to Menu</button>
   </div>
 
+  <!-- Notification Area -->
+  <div id="notificationArea" style="position: fixed; top: 10px; right: 10px; z-index: 4; width: 250px;">
+    <div id="notification"
+      style="background: rgba(0, 0, 0, 0.7); color: white; padding: 10px; border-radius: 5px; display: none;"></div>
+  </div>
+
   <!-- Game Canvas -->
   <canvas id="gameCanvas" style="display: none;"></canvas>
 
   <!-- Game Script -->
   <script src="script.js"></script>
+
+  <!-- Fullscreen Script -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      // Ask for fullscreen on the first click
+      document.body.addEventListener('click', function () {
+        if (document.fullscreenElement === null) {
+          if (document.documentElement.requestFullscreen) {
+            document.documentElement.requestFullscreen();
+          } else if (document.documentElement.mozRequestFullScreen) { // Firefox
+            document.documentElement.mozRequestFullScreen();
+          } else if (document.documentElement.webkitRequestFullscreen) { // Chrome, Safari and Opera
+            document.documentElement.webkitRequestFullscreen();
+          } else if (document.documentElement.msRequestFullscreen) { // IE/Edge
+            document.documentElement.msRequestFullscreen();
+          }
+        }
+      });
+    });
+  </script>
 </body>
+
 </html>
