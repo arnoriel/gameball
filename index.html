@@ -194,26 +194,6 @@
 
   <!-- Game Script -->
   <script src="script.js"></script>
-
-  <!-- Fullscreen Script -->
-  <script>
-    document.addEventListener('DOMContentLoaded', function () {
-      // Ask for fullscreen on the first click
-      document.body.addEventListener('click', function () {
-        if (document.fullscreenElement === null) {
-          if (document.documentElement.requestFullscreen) {
-            document.documentElement.requestFullscreen();
-          } else if (document.documentElement.mozRequestFullScreen) { // Firefox
-            document.documentElement.mozRequestFullScreen();
-          } else if (document.documentElement.webkitRequestFullscreen) { // Chrome, Safari and Opera
-            document.documentElement.webkitRequestFullscreen();
-          } else if (document.documentElement.msRequestFullscreen) { // IE/Edge
-            document.documentElement.msRequestFullscreen();
-          }
-        }
-      });
-    });
-  </script>
 </body>
 
 </html>
