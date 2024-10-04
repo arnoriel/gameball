@@ -323,10 +323,10 @@ function startCoinTimer() {
   coinTimer = setInterval(() => {
     coins += coinRate;
     totalCoinsCollected += coinRate;
-    console.log(`${coinRate} coin(s) added via timer. Total coins: ${coins}`);
+    console.log(`${coinRate} coin(s) added via timer. Total coins: ${totalCoinsCollected}`);
     localStorage.setItem('totalCoinsCollected', totalCoinsCollected);
     // Update HUD saat koin ditambahkan
-    shopCoins.innerText = coins;
+    shopCoins.innerText = totalCoinsCollected;
   }, coinInterval); // 40 detik
 }
 
@@ -358,7 +358,7 @@ function startGame() {
   isGameOver = false;
   isPaused = false;
   score = 0;
-  coins = 0;
+  coins = totalCoinsCollected; // Set coins berdasarkan totalCoinsCollected
   player.y = canvas.height / 2;
   playerVelY = 0;
   jumpCount = 0;
@@ -385,7 +385,7 @@ function restartGame() {
   isGameOver = false;
   isPaused = false;
   score = 0;
-  coins = 0;
+  coins = totalCoinsCollected; // Set coins berdasarkan totalCoinsCollected
   player.y = canvas.height / 2;
   playerVelY = 0;
   jumpCount = 0;
@@ -429,7 +429,7 @@ function endGame() {
   // Menampilkan skor akhir
   finalScore.textContent = `Score: ${score}`;
   finalHighScore.textContent = `High Score: ${highScore}`;
-  finalCoins.textContent = `Coins: ${coins}`;
+  finalCoins.textContent = `Coins: ${totalCoinsCollected}`;
 
   // Menghentikan timer koin
   stopCoinTimer();
@@ -481,7 +481,7 @@ function goBackToMenu() {
 shopBtn.addEventListener('click', () => {
   menuScreen.style.display = 'none';     // Hide main menu
   shopScreen.style.display = 'block';    // Show shop screen
-  shopCoins.innerText = coins;           // Display the current coins
+  shopCoins.innerText = totalCoinsCollected; // Display total coins
   canvas.style.display = 'none';         // Sembunyikan game canvas saat di shop
 });
 
@@ -537,8 +537,7 @@ backToMenuFromShopBtn.addEventListener('click', () => {
 
 // Menambahkan Event Listeners pada Shop Items
 shopItems.forEach(item => {
-  const buyButton = item.querySelector('button');
-  buyButton.addEventListener('click', () => {
+  item.addEventListener('click', () => { // Perbaikan di sini
     const itemType = item.getAttribute('data-item');
     handlePurchase(itemType);
   });
@@ -553,19 +552,21 @@ function handlePurchase(item) {
 
   if (item === 'jumpBoost') {
     cost = 5;
-    if (coins >= cost) {
-      coins -= cost;
+    if (totalCoinsCollected >= cost) { // Gunakan totalCoinsCollected
+      totalCoinsCollected -= cost;
+      coins -= cost; // Kurangi juga dari session coins
       jumpStrength -= 5;  // Membuat loncatan lebih kuat
       successMessage = 'You purchased Jump Boost!';
-      console.log(`Purchased Jump Boost. Remaining coins: ${coins}`);
+      console.log(`Purchased Jump Boost. Remaining coins: ${totalCoinsCollected}`);
     }
   } else if (item === 'extraLife') {
     cost = 10;
-    if (coins >= cost) {
-      coins -= cost;
+    if (totalCoinsCollected >= cost) { // Gunakan totalCoinsCollected
+      totalCoinsCollected -= cost;
+      coins -= cost; // Kurangi juga dari session coins
       // Tambahkan logika extra life di sini
       successMessage = 'You purchased Extra Life!';
-      console.log(`Purchased Extra Life. Remaining coins: ${coins}`);
+      console.log(`Purchased Extra Life. Remaining coins: ${totalCoinsCollected}`);
     }
   } else {
     console.log(`Unknown item type: ${item}`);
@@ -578,8 +579,11 @@ function handlePurchase(item) {
     alert(failureMessage);
   }
 
+  // Update totalCoinsCollected di localStorage setelah pembelian
+  localStorage.setItem('totalCoinsCollected', totalCoinsCollected);
+
   // Update displayed coin count setelah pembelian
-  shopCoins.innerText = coins;
+  shopCoins.innerText = totalCoinsCollected;
 }
 
 // Inisialisasi game untuk menampilkan menu utama
