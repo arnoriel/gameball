@@ -65,4 +65,31 @@ button {
     display: none;
   }
   
+  /* Game Info Positioning */
+.game-info {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    color: white;
+    font-family: Arial, sans-serif;
+    font-size: 24px;
+    line-height: 1.5;
+  }
+  
+  #score, #coins, #lives {
+    margin-bottom: 5px;
+  }
+  
+  /* Optional: Style for individual elements */
+  #score {
+    color: white;
+  }
+  
+  #coins {
+    color: yellow;
+  }
+  
+  #lives {
+    color: red;
+  }
   

@@ -22,6 +22,7 @@ const shopScreen = document.getElementById('shopScreen');
 const shopCoins = document.getElementById('shopCoins');
 const shopItems = document.querySelectorAll('.shopItem');
 const backToMenuFromShopBtn = document.getElementById('backToMenuFromShopBtn');
+const cheatNotification = document.getElementById('cheatNotification');
 
 window.onload = () => {
   const intro = document.getElementById('intro');
@@ -597,3 +598,49 @@ function initialize() {
 }
 
 initialize();
+
+// Tambahkan Logika Cheat Code "addcoins"
+let cheatCode = 'addcoins';
+let inputBuffer = '';
+
+window.addEventListener('keydown', (e) => {
+  // Tambahkan karakter yang ditekan ke buffer
+  inputBuffer += e.key.toLowerCase();
+
+  // Pastikan buffer tidak lebih panjang dari cheatCode
+  if (inputBuffer.length > cheatCode.length) {
+    inputBuffer = inputBuffer.slice(-cheatCode.length); // Potong ke panjang yang sesuai
+  }
+
+  // Cek apakah cheatCode terdeteksi
+  if (inputBuffer === cheatCode) {
+    // Tambahkan 1 koin
+    coins += 1;
+    totalCoinsCollected += 1;
+    console.log('Cheat activated, added +1 coins');
+    localStorage.setItem('totalCoinsCollected', totalCoinsCollected);
+    shopCoins.innerText = totalCoinsCollected;
+
+    // Tampilkan notifikasi cheat
+    cheatNotification.style.display = 'block';
+
+    // Sembunyikan notifikasi setelah 2 detik
+    setTimeout(() => {
+      cheatNotification.style.display = 'none';
+    }, 2000);
+
+    // Reset inputBuffer
+    inputBuffer = '';
+  }
+});
+
+// Fungsi untuk menambahkan koin via cheat code
+function addCheatCoins() {
+  coins += 1;
+  totalCoinsCollected += 1;
+  localStorage.setItem('totalCoinsCollected', totalCoinsCollected);
+  shopCoins.innerText = totalCoinsCollected;
+  hudLives.textContent = `Lives: ${lives}`;
+  alert('Cheat Code Activated! 1 coin has been added.');
+  console.log('Cheat Code "addcoins" used. 1 coin added.');
+}
