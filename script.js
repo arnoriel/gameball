@@ -3,7 +3,7 @@ const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
 const menuScreen = document.getElementById('menuScreen');
 const startBtn = document.getElementById('startBtn');
-const shopBtn = document.getElementById('shopBtn'); // Placeholder untuk fungsi shop
+const shopBtn = document.getElementById('shopBtn'); // Tombol Shop
 const exitBtn = document.getElementById('exitBtn');
 const pauseBtn = document.getElementById('pauseBtn');
 const pauseMenu = document.getElementById('pauseMenu');
@@ -23,6 +23,15 @@ const shopCoins = document.getElementById('shopCoins');
 const shopItems = document.querySelectorAll('.shopItem');
 const backToMenuFromShopBtn = document.getElementById('backToMenuFromShopBtn');
 const cheatNotification = document.getElementById('cheatNotification');
+
+// Definisikan Skins yang Tersedia
+const skins = [
+  { id: 'default', name: 'Default', color: '#00ff00', cost: 0 }, // Skin default, gratis
+  { id: 'red', name: 'Red', color: '#ff0000', cost: 10 },
+  { id: 'blue', name: 'Blue', color: '#0000ff', cost: 15 },
+  { id: 'yellow', name: 'Yellow', color: '#ffff00', cost: 20 },
+  // Tambahkan lebih banyak skins sesuai kebutuhan
+];
 
 window.onload = () => {
   const intro = document.getElementById('intro');
@@ -68,6 +77,9 @@ window.onload = () => {
     // Mulai game
     startGame();
   });
+
+  // Inisialisasi Skins saat game dimulai
+  initializeSkins();
 }
 
 // Tambahkan elemen loading screen dan progress bar ke dalam variabel
@@ -192,7 +204,7 @@ function generateInitialPlatforms() {
 function drawPlayer() {
   ctx.beginPath();
   ctx.arc(player.x, player.y, player.radius, 0, Math.PI * 2);
-  ctx.fillStyle = player.color;
+  ctx.fillStyle = player.color; // Menggunakan warna skin
   ctx.fill();
   ctx.closePath();
 }
@@ -373,6 +385,9 @@ function startGame() {
   // Mulai timer koin
   startCoinTimer();
 
+  // Muat skin yang dipilih
+  loadCurrentSkin();
+
   // Reset time
   lastTime = 0;
 
@@ -403,6 +418,9 @@ function restartGame() {
 
   // Mulai timer koin
   startCoinTimer();
+
+  // Muat skin yang dipilih
+  loadCurrentSkin();
 
   // Reset time
   lastTime = 0;
@@ -553,21 +571,62 @@ function handlePurchase(item) {
 
   if (item === 'jumpBoost') {
     cost = 5;
-    if (totalCoinsCollected >= cost) { // Gunakan totalCoinsCollected
+    if (totalCoinsCollected >= cost) {
       totalCoinsCollected -= cost;
-      coins -= cost; // Kurangi juga dari session coins
+      coins -= cost;
       jumpStrength -= 5;  // Membuat loncatan lebih kuat
       successMessage = 'You purchased Jump Boost!';
       console.log(`Purchased Jump Boost. Remaining coins: ${totalCoinsCollected}`);
     }
   } else if (item === 'extraLife') {
     cost = 10;
-    if (totalCoinsCollected >= cost) { // Gunakan totalCoinsCollected
+    if (totalCoinsCollected >= cost) {
       totalCoinsCollected -= cost;
-      coins -= cost; // Kurangi juga dari session coins
+      coins -= cost;
       // Tambahkan logika extra life di sini
       successMessage = 'You purchased Extra Life!';
       console.log(`Purchased Extra Life. Remaining coins: ${totalCoinsCollected}`);
+    }
+  } 
+  // Penanganan pembelian atau pemilihan skin
+  else if (item.startsWith('skin_')) {
+    const skinId = item.split('_')[1];
+    const selectedSkin = skins.find(skin => skin.id === skinId);
+
+    if (selectedSkin) {
+      if (selectedSkin.cost === 0) {
+        // Skin gratis, langsung pilih
+        localStorage.setItem('currentSkin', skinId);
+        player.color = selectedSkin.color;
+        successMessage = `You selected ${selectedSkin.name}!`;
+        console.log(`Selected ${selectedSkin.name}.`);
+      } else {
+        // Periksa apakah skin sudah dibeli
+        let purchasedSkins = JSON.parse(localStorage.getItem('purchasedSkins')) || [];
+        if (purchasedSkins.includes(skinId)) {
+          // Jika sudah dibeli, langsung pilih
+          localStorage.setItem('currentSkin', skinId);
+          player.color = selectedSkin.color;
+          successMessage = `You selected ${selectedSkin.name}!`;
+          console.log(`Selected ${selectedSkin.name}.`);
+        } else {
+          // Jika belum dibeli, coba beli
+          cost = selectedSkin.cost;
+          if (totalCoinsCollected >= cost) {
+            totalCoinsCollected -= cost;
+            coins -= cost;
+            purchasedSkins.push(skinId);
+            localStorage.setItem('purchasedSkins', JSON.stringify(purchasedSkins));
+            localStorage.setItem('currentSkin', skinId);
+            player.color = selectedSkin.color;
+            successMessage = `You purchased and selected ${selectedSkin.name}!`;
+            console.log(`Purchased ${selectedSkin.name}. Remaining coins: ${totalCoinsCollected}`);
+          }
+        }
+      }
+    } else {
+      console.log(`Skin with id ${skinId} not found.`);
+      return;
     }
   } else {
     console.log(`Unknown item type: ${item}`);
@@ -585,6 +644,56 @@ function handlePurchase(item) {
 
   // Update displayed coin count setelah pembelian
   shopCoins.innerText = totalCoinsCollected;
+
+  // Re-inisialisasi skins untuk memperbarui status
+  initializeSkins();
+}
+
+// Fungsi untuk inisialisasi skins yang sudah dibeli dan skin yang dipilih
+function initializeSkins() {
+  // Ambil skins yang sudah dibeli dari localStorage
+  const purchasedSkins = JSON.parse(localStorage.getItem('purchasedSkins')) || [];
+
+  // Ambil skin yang saat ini dipilih
+  const currentSkinId = localStorage.getItem('currentSkin') || 'default';
+  const currentSkin = skins.find(skin => skin.id === currentSkinId) || skins[0];
+  player.color = currentSkin.color;
+
+  // Tampilkan indikator skin yang sudah dibeli
+  shopItems.forEach(item => {
+    const itemType = item.getAttribute('data-item');
+    if (itemType.startsWith('skin_')) {
+      const skinId = itemType.split('_')[1];
+      const selectedSkin = skins.find(skin => skin.id === skinId);
+      if (selectedSkin) {
+        if (purchasedSkins.includes(skinId) || skinId === 'default') {
+          // Tampilkan sebagai sudah dibeli
+          item.classList.add('purchased');
+          // Cek apakah sudah ada label "Owned"
+          if (!item.querySelector('.owned-label')) {
+            const ownedLabel = document.createElement('span');
+            ownedLabel.classList.add('owned-label');
+            ownedLabel.innerText = 'Owned';
+            item.appendChild(ownedLabel);
+          }
+        } else {
+          // Jika belum dibeli, pastikan tidak ada label "Owned"
+          const ownedLabel = item.querySelector('.owned-label');
+          if (ownedLabel) {
+            ownedLabel.remove();
+          }
+          item.classList.remove('purchased');
+        }
+      }
+    }
+  });
+}
+
+// Fungsi untuk memuat skin yang dipilih saat game dimulai
+function loadCurrentSkin() {
+  const currentSkinId = localStorage.getItem('currentSkin') || 'default';
+  const currentSkin = skins.find(skin => skin.id === currentSkinId) || skins[0];
+  player.color = currentSkin.color;
 }
 
 // Inisialisasi game untuk menampilkan menu utama
@@ -595,6 +704,12 @@ function initialize() {
   pauseMenu.style.display = 'none';
   confirmationModal.style.display = 'none';
   gameOverScreen.style.display = 'none';
+  
+  // Inisialisasi skins
+  initializeSkins();
+
+  // Muat skin yang dipilih
+  loadCurrentSkin();
 }
 
 initialize();
@@ -633,14 +748,3 @@ window.addEventListener('keydown', (e) => {
     inputBuffer = '';
   }
 });
-
-// Fungsi untuk menambahkan koin via cheat code
-function addCheatCoins() {
-  coins += 1;
-  totalCoinsCollected += 1;
-  localStorage.setItem('totalCoinsCollected', totalCoinsCollected);
-  shopCoins.innerText = totalCoinsCollected;
-  hudLives.textContent = `Lives: ${lives}`;
-  alert('Cheat Code Activated! 1 coin has been added.');
-  console.log('Cheat Code "addcoins" used. 1 coin added.');
-}

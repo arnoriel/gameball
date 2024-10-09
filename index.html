@@ -149,13 +149,40 @@
   </div>
 
   <!-- Shop Screen Overlay -->
-  <div id="shopScreen" style="display:none;">
-    <h2>Shop</h2>
-    <p>Your Coins: <span id="shopCoins">0</span></p>
-    <button class="shopItem" data-item="jumpBoost">Jump Boost (Cost: 5 Coins)</button>
-    <button class="shopItem" data-item="extraLife">Extra Life (Cost: 10 Coins)</button>
-    <button id="backToMenuFromShopBtn">Back to Menu</button>
+<div id="shopScreen" style="display: none;">
+  <h2>Shop</h2>
+  <p id="shopCoins">Coins: 0</p>
+  
+  <!-- Item Jump Boost -->
+  <div class="shopItem" data-item="jumpBoost">
+    <span>Jump Boost</span>
+    <span>5 Coins</span>
   </div>
+  
+  <!-- Item Extra Life -->
+  <div class="shopItem" data-item="extraLife">
+    <span>Extra Life</span>
+    <span>10 Coins</span>
+  </div>
+  
+  <!-- Item Skins -->
+  <div class="shopItem" data-item="skin_red">
+    <span>Red Skin</span>
+    <span>10 Coins</span>
+  </div>
+  <div class="shopItem" data-item="skin_blue">
+    <span>Blue Skin</span>
+    <span>15 Coins</span>
+  </div>
+  <div class="shopItem" data-item="skin_yellow">
+    <span>Yellow Skin</span>
+    <span>20 Coins</span>
+  </div>
+  
+  <!-- Tambahkan lebih banyak skins sesuai kebutuhan -->
+  
+  <button id="backToMenuFromShopBtn">Back to Menu</button>
+</div>
 
   <!-- Pause Button -->
   <button id="pauseBtn" style="display: none;">

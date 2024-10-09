@@ -93,3 +93,34 @@ button {
     color: red;
   }
   
+  /* Gaya untuk shopItem yang sudah dibeli */
+.shopItem.purchased {
+  opacity: 0.6;
+  pointer-events: none; /* Mencegah klik jika sudah dibeli */
+}
+
+/* Label "Owned" pada shopItem */
+.owned-label {
+  display: block;
+  margin-top: 5px;
+  font-size: 14px;
+  color: #00ff00;
+  text-align: center;
+}
+
+/* Gaya tambahan untuk tampilan shop */
+#shopScreen {
+  padding: 20px;
+}
+
+.shopItem {
+  border: 1px solid #ccc;
+  padding: 10px;
+  margin: 10px 0;
+  cursor: pointer;
+  position: relative;
+}
+
+.shopItem:hover {
+  background-color: #f0f0f0;
+}
