@@ -1,104 +1,52 @@
-body, html {
-    margin: 0;
-    padding: 0;
-    overflow: hidden;
-    font-family: Arial, sans-serif;
+/* Reset CSS */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body,
+html {
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  font-family: Arial, sans-serif;
 }
 
 canvas {
-    display: block;
-    background-color: #6eccf1;
+  display: block;
+  background-color: #6eccf1;
 }
 
+/* Menu Screen */
 .menu-screen {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    text-align: center;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
 }
 
+/* Shop Screen */
 #shopScreen {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background: rgba(0, 0, 0, 0.8);
-    color: #fff;
-    padding: 20px;
-    border-radius: 10px;
-    text-align: center;
-    z-index: 3;
-    display: none;
-    width: 80%;
-    max-width: 300px;
-  }
-  
-
-button {
-    padding: 10px 20px;
-    margin: 10px;
-    font-size: 18px;
-}
-
-#gameOverMessage {
-    display: none;
-    font-size: 30px;
-    color: red;
-    text-align: center;
-}
-
-.overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background-color: rgba(0, 0, 0, 0.8);
-    color: white;
-    font-size: 24px;
-    text-align: center;
-    z-index: 1000;
-    display: none;
-  }
-  
-  /* Game Info Positioning */
-.game-info {
-    position: absolute;
-    top: 20px;
-    left: 20px;
-    color: white;
-    font-family: Arial, sans-serif;
-    font-size: 24px;
-    line-height: 1.5;
-  }
-  
-  #score, #coins, #lives {
-    margin-bottom: 5px;
-  }
-  
-  /* Optional: Style for individual elements */
-  #score {
-    color: white;
-  }
-  
-  #coins {
-    color: yellow;
-  }
-  
-  #lives {
-    color: red;
-  }
-  
- /* Gaya Umum untuk Shop Screen */
-#shopScreen {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: rgba(0, 0, 0, 0.9);
+  color: #fff;
   padding: 20px;
+  border-radius: 10px;
+  text-align: center;
+  z-index: 3;
+  display: none;
+  width: 90%;
   max-width: 1200px;
-  margin: 0 auto;
-  font-family: Arial, sans-serif;
+  /* Maksimum lebar untuk layar besar */
+  overflow-y: auto;
+  /* Scroll jika konten melebihi tinggi layar */
+  max-height: 90vh;
+  /* Maksimum tinggi shop */
 }
 
 #shopScreen h2 {
@@ -115,21 +63,111 @@ button {
   text-align: center;
 }
 
-/* Gaya untuk Row */
+/* Row and Column Layout */
 .row {
   display: flex;
   flex-wrap: wrap;
-  justify-content: center; /* Menyelaraskan item di tengah */
-  gap: 20px; /* Jarak antar item */
+  justify-content: center;
+  /* Menyelaraskan item di tengah */
+  gap: 20px;
+  /* Jarak antar item */
 }
 
-/* Gaya untuk Column */
 .col {
-  flex: 1 1 200px; /* Menyesuaikan lebar kolom */
-  max-width: 250px; /* Maksimal lebar kolom */
+  flex: 1 1 calc(33.333% - 40px);
+  /* 3 kolom */
+  max-width: calc(33.333% - 40px);
 }
 
-/* Gaya untuk Shop Item */
+@media (max-width: 1200px) {
+  .col {
+    flex: 1 1 calc(25% - 40px);
+    /* 4 kolom */
+    max-width: calc(25% - 40px);
+  }
+}
+
+@media (max-width: 900px) {
+  .col {
+    flex: 1 1 calc(33.333% - 40px);
+    /* 3 kolom */
+    max-width: calc(33.333% - 40px);
+  }
+}
+
+@media (max-width: 600px) {
+  .col {
+    flex: 1 1 calc(50% - 40px);
+    /* 2 kolom */
+    max-width: calc(50% - 40px);
+  }
+
+  #shopScreen {
+    padding: 10px;
+  }
+
+  .shopItem {
+    padding: 10px;
+  }
+
+  .shopItem span {
+    font-size: 14px;
+  }
+
+  .shopButton {
+    padding: 8px 12px;
+    font-size: 14px;
+  }
+
+  .owned-label {
+    font-size: 12px;
+  }
+
+  #shopScreen h2 {
+    font-size: 24px;
+  }
+
+  #shopScreen h3 {
+    font-size: 18px;
+  }
+
+  #backToMenuFromShopBtn {
+    padding: 8px 16px;
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 400px) {
+  .col {
+    flex: 1 1 100%;
+    /* 1 kolom */
+    max-width: 100%;
+  }
+
+  #shopScreen h2 {
+    font-size: 20px;
+  }
+
+  #shopScreen h3 {
+    font-size: 16px;
+  }
+
+  .shopButton {
+    padding: 6px 10px;
+    font-size: 12px;
+  }
+
+  .owned-label {
+    font-size: 10px;
+  }
+
+  #backToMenuFromShopBtn {
+    padding: 6px 12px;
+    font-size: 12px;
+  }
+}
+
+/* Shop Item */
 .shopItem {
   border: 1px solid #ccc;
   border-radius: 8px;
@@ -138,6 +176,9 @@ button {
   background-color: #464646;
   transition: transform 0.2s, box-shadow 0.2s;
   position: relative;
+  flex: 1 1 calc(33.333% - 40px);
+  /* 3 kolom */
+  max-width: calc(33.333% - 40px);
 }
 
 .shopItem:hover {
@@ -145,49 +186,31 @@ button {
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
-/* Gaya untuk Tombol Buy */
+.shopItem span {
+  display: block;
+  margin-bottom: 10px;
+  font-size: 16px;
+  color: #fff;
+}
+
+/* Shop Button */
 .shopButton {
   margin-top: 10px;
-  padding: 8px 16px;
+  padding: 10px 16px;
   border: none;
   border-radius: 4px;
   background-color: #00aaff;
   color: white;
   cursor: pointer;
   transition: background-color 0.2s;
+  width: 100%;
+  font-size: 16px;
 }
 
 .shopButton:hover {
   background-color: #0088cc;
 }
 
-/* Gaya untuk Tombol Kembali ke Menu */
-#backToMenuFromShopBtn {
-  display: block;
-  margin: 0 auto;
-  padding: 10px 20px;
-  border: none;
-  border-radius: 4px;
-  background-color: #555555;
-  color: white;
-  cursor: pointer;
-  transition: background-color 0.2s;
-}
-
-#backToMenuFromShopBtn:hover {
-  background-color: #333333;
-}
-
-/* Gaya untuk Indikator 'Owned' */
-.owned-label {
-  display: block;
-  margin-top: 10px;
-  font-size: 14px;
-  color: #00ff00;
-  font-weight: bold;
-}
-
-/* Gaya untuk Shop Item yang Sudah Dibeli */
 .shopItem.purchased {
   opacity: 0.6;
 }
@@ -199,4 +222,276 @@ button {
 
 .shopItem.purchased .shopButton:hover {
   background-color: #00cc00;
+}
+
+/* Owned Label */
+.owned-label {
+  display: block;
+  margin-top: 10px;
+  font-size: 14px;
+  color: #00ff00;
+  font-weight: bold;
+}
+
+/* Back to Menu Button */
+#backToMenuFromShopBtn {
+  display: block;
+  margin: 20px auto 0;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  background-color: #555555;
+  color: white;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  font-size: 16px;
+}
+
+#backToMenuFromShopBtn:hover {
+  background-color: #333333;
+}
+
+/* Game Over Message */
+#gameOverMessage {
+  display: none;
+  font-size: 30px;
+  color: red;
+  text-align: center;
+}
+
+/* Overlay */
+.overlay {
+  position: fixed;
+  /* Changed from absolute to fixed */
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(0, 0, 0, 0.8);
+  color: white;
+  font-size: 24px;
+  text-align: center;
+  z-index: 1000;
+  display: none;
+}
+
+/* Game Info Positioning */
+.game-info {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  color: white;
+  font-family: Arial, sans-serif;
+  font-size: 24px;
+  line-height: 1.5;
+}
+
+#score,
+#coins,
+#lives {
+  margin-bottom: 5px;
+}
+
+#score {
+  color: white;
+}
+
+#coins {
+  color: yellow;
+}
+
+#lives {
+  color: red;
+}
+
+/* Modal Styles */
+.modal {
+  display: none;
+  /* Hidden by default */
+  position: fixed;
+  /* Stay in place */
+  z-index: 1;
+  /* Sit on top */
+  left: 0;
+  top: 0;
+  width: 100%;
+  /* Full width */
+  height: 100%;
+  /* Full height */
+  overflow: auto;
+  /* Enable scroll if needed */
+  background-color: rgba(0, 0, 0, 0.5);
+  /* Black w/ opacity */
+}
+
+.modal-content {
+  background-color: #fefefe;
+  margin: 10% auto;
+  /* 10% from the top and centered */
+  padding: 20px;
+  border: 1px solid #888;
+  width: 80%;
+  max-width: 400px;
+  /* Could be more or less, depending on screen size */
+  border-radius: 8px;
+  position: relative;
+}
+
+.close {
+  color: #aaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+  position: absolute;
+  right: 20px;
+  top: 10px;
+  cursor: pointer;
+}
+
+.close:hover,
+.close:focus {
+  color: black;
+  text-decoration: none;
+}
+
+form label {
+  display: block;
+  margin-top: 10px;
+  color: #333;
+}
+
+form input {
+  width: 100%;
+  padding: 8px;
+  margin-top: 5px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+form button {
+  margin-top: 15px;
+  width: 100%;
+  padding: 10px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+form button:hover {
+  background-color: #0056b3;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 1200px) {
+  .col {
+    flex: 1 1 calc(25% - 40px);
+    /* 4 kolom */
+    max-width: calc(25% - 40px);
+  }
+}
+
+@media (max-width: 900px) {
+  .col {
+    flex: 1 1 calc(33.333% - 40px);
+    /* 3 kolom */
+    max-width: calc(33.333% - 40px);
+  }
+}
+
+@media (max-width: 600px) {
+  .col {
+    flex: 1 1 calc(50% - 40px);
+    /* 2 kolom */
+    max-width: calc(50% - 40px);
+  }
+
+  #shopScreen {
+    padding: 10px;
+  }
+
+  .shopItem {
+    padding: 10px;
+  }
+
+  .shopItem span {
+    font-size: 14px;
+  }
+
+  .shopButton {
+    padding: 8px 12px;
+    font-size: 14px;
+  }
+
+  .owned-label {
+    font-size: 12px;
+  }
+
+  #shopScreen h2 {
+    font-size: 24px;
+  }
+
+  #shopScreen h3 {
+    font-size: 18px;
+  }
+
+  #backToMenuFromShopBtn {
+    padding: 8px 16px;
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 400px) {
+  .col {
+    flex: 1 1 100%;
+    /* 1 kolom */
+    max-width: 100%;
+  }
+
+  #shopScreen h2 {
+    font-size: 20px;
+  }
+
+  #shopScreen h3 {
+    font-size: 16px;
+  }
+
+  .shopButton {
+    padding: 6px 10px;
+    font-size: 12px;
+  }
+
+  .owned-label {
+    font-size: 10px;
+  }
+
+  #backToMenuFromShopBtn {
+    padding: 6px 12px;
+    font-size: 12px;
+  }
+
+  /* Gaya untuk Tooltip atau Preview */
+  .shopItem:hover .shopButton {
+    background-color: #0066cc;
+  }
+
+  /* Tambahkan animasi untuk modal */
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+
+    to {
+      opacity: 1;
+    }
+  }
+
+  .modal-content {
+    animation: fadeIn 0.3s ease-in-out;
+  }
+
 }

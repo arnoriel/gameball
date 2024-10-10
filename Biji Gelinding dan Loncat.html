@@ -148,40 +148,94 @@
     <p>Beta Version 0.1 (Under Development)</p>
   </div>
 
-  <!-- Shop Screen Overlay -->
+<!-- Shop Screen -->
 <div id="shopScreen" style="display: none;">
   <h2>Shop</h2>
-  <p id="shopCoins">Coins: 0</p>
-  
-  <!-- Item Jump Boost -->
-  <div class="shopItem" data-item="jumpBoost">
-    <span>Jump Boost</span>
-    <span>5 Coins</span>
+  <!-- Section for Boosts -->
+  <div class="shopSection">
+    <button id="backToMenuFromShopBtn">Back to Menu</button>
+    <p id="shopCoins">Coins: 0</p>
+    <h3>Boosts</h3>
+    <div class="row">
+      <!-- Item Jump Boost -->
+      <div class="col">
+        <div class="shopItem" data-item="jumpBoost">
+          <span>Jump Boost</span>
+          <span>5 Coins</span>
+          <button class="shopButton">Buy</button>
+        </div>
+      </div>
+      
+      <!-- Item Extra Life -->
+      <div class="col">
+        <div class="shopItem" data-item="extraLife">
+          <span>Extra Life</span>
+          <span>10 Coins</span>
+          <button class="shopButton">Buy</button>
+        </div>
+      </div>
+    </div>
   </div>
   
-  <!-- Item Extra Life -->
-  <div class="shopItem" data-item="extraLife">
-    <span>Extra Life</span>
-    <span>10 Coins</span>
+  <!-- Section for Skins -->
+  <div class="shopSection">
+    <h3>Skins</h3>
+    <div class="row">
+      <!-- Item Skins -->
+      <div class="col">
+        <div class="shopItem" data-item="skin_red">
+          <span>Red Skin</span>
+          <span>10 Coins</span>
+          <button class="shopButton">Buy</button>
+        </div>
+      </div>
+      <div class="col">
+        <div class="shopItem" data-item="skin_blue">
+          <span>Blue Skin (Epic)</span>
+          <span>15 Coins</span>
+          <button class="shopButton">Buy</button>
+        </div>
+      </div>
+      <div class="col">
+        <div class="shopItem" data-item="skin_yellow">
+          <span>Yellow Skin (Legendary)</span>
+          <span>20 Coins</span>
+          <button class="shopButton">Buy</button>
+        </div>
+      </div>
+      <!-- Tambahkan lebih banyak skins sesuai kebutuhan -->
+    </div>
   </div>
   
-  <!-- Item Skins -->
-  <div class="shopItem" data-item="skin_red">
-    <span>Red Skin</span>
-    <span>10 Coins</span>
+  <!-- Section for Trails -->
+  <div class="shopSection">
+    <h3>Trails</h3>
+    <div class="row">
+      <!-- Item Trails -->
+      <div class="col">
+        <div class="shopItem" data-item="trail_maroon">
+          <span>Maroon Trail</span>
+          <span>5 Coins</span>
+          <button class="shopButton">Buy</button>
+        </div>
+      </div>
+      <div class="col">
+        <div class="shopItem" data-item="trail_cyan">
+          <span>Cyan Trail (Epic)</span>
+          <span>10 Coins</span>
+          <button class="shopButton">Buy</button>
+        </div>
+      </div>
+      <div class="col">
+        <div class="shopItem" data-item="trail_orange">
+          <span>Orange Trail (Legendary)</span>
+          <span>15 Coins</span>
+          <button class="shopButton">Buy</button>
+        </div>
+      </div>
+      <!-- Tambahkan lebih banyak trails sesuai kebutuhan -->
+    </div>
   </div>
-  <div class="shopItem" data-item="skin_blue">
-    <span>Blue Skin</span>
-    <span>15 Coins</span>
-  </div>
-  <div class="shopItem" data-item="skin_yellow">
-    <span>Yellow Skin</span>
-    <span>20 Coins</span>
-  </div>
-  
-  <!-- Tambahkan lebih banyak skins sesuai kebutuhan -->
-  
-  <button id="backToMenuFromShopBtn">Back to Menu</button>
 </div>
 
   <!-- Pause Button -->
