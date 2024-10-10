@@ -1,0 +1,7 @@
+Game: Biji Gelinding dan Loncat
+Platform: Playable for Mobile and Dekstop Devices
+Version: (Beta 0.1)
+
+Important Messages:
+- Game ini masih dalam tahap pengembangan,jadi tolong sabar kalo ada bug atau apa, kalo ada apa apa atau mau didiskusikan tinggal wa ini wa.me/6285797009915 untuk perkembangan kedepannya.
+- New Feature "Skins Shop" (under development, next update: able to switch skins after we buy it)

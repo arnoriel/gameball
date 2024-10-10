@@ -24,13 +24,21 @@ const shopItems = document.querySelectorAll('.shopItem');
 const backToMenuFromShopBtn = document.getElementById('backToMenuFromShopBtn');
 const cheatNotification = document.getElementById('cheatNotification');
 
-// Definisikan Skins yang Tersedia
+// Definisikan Skins dan Trails yang Tersedia
 const skins = [
   { id: 'default', name: 'Default', color: '#00ff00', cost: 0 }, // Skin default, gratis
   { id: 'red', name: 'Red', color: '#ff0000', cost: 10 },
   { id: 'blue', name: 'Blue', color: '#0000ff', cost: 15 },
   { id: 'yellow', name: 'Yellow', color: '#ffff00', cost: 20 },
   // Tambahkan lebih banyak skins sesuai kebutuhan
+];
+
+const trails = [
+  { id: 'default', name: 'Default', color: '#00ff00', cost: 0 }, // Trail default, gratis
+  { id: 'maroon', name: 'Maroon', color: '#620000', cost: 5 },
+  { id: 'cyan', name: 'Cyan', color: '#00ffff', cost: 10 },
+  { id: 'orange', name: 'Orange', color: '#ffa500', cost: 15 },
+  // Tambahkan lebih banyak trails sesuai kebutuhan
 ];
 
 window.onload = () => {
@@ -78,8 +86,9 @@ window.onload = () => {
     startGame();
   });
 
-  // Inisialisasi Skins saat game dimulai
+  // Inisialisasi Skins dan Trails saat game dimulai
   initializeSkins();
+  initializeTrails();
 }
 
 // Tambahkan elemen loading screen dan progress bar ke dalam variabel
@@ -175,6 +184,7 @@ const player = {
 
 // Array untuk jejak pemain
 let trail = [];
+let currentTrailColor = '#00ff00'; // Warna trail default
 
 // Array untuk platform
 let platforms = [];
@@ -214,7 +224,7 @@ function drawTrail() {
   trail.forEach((pos, index) => {
     ctx.beginPath();
     ctx.arc(pos.x, pos.y, player.radius - (index * 2), 0, Math.PI * 2);
-    ctx.fillStyle = `rgba(0, 255, 0, ${1 - index * 0.1})`; // Perbaiki penggunaan backticks
+    ctx.fillStyle = currentTrailColor; // Menggunakan warna trail yang dipilih
     ctx.fill();
     ctx.closePath();
   });
@@ -385,8 +395,9 @@ function startGame() {
   // Mulai timer koin
   startCoinTimer();
 
-  // Muat skin yang dipilih
+  // Muat skin dan trail yang dipilih
   loadCurrentSkin();
+  loadCurrentTrail();
 
   // Reset time
   lastTime = 0;
@@ -419,8 +430,9 @@ function restartGame() {
   // Mulai timer koin
   startCoinTimer();
 
-  // Muat skin yang dipilih
+  // Muat skin dan trail yang dipilih
   loadCurrentSkin();
+  loadCurrentTrail();
 
   // Reset time
   lastTime = 0;
@@ -628,6 +640,47 @@ function handlePurchase(item) {
       console.log(`Skin with id ${skinId} not found.`);
       return;
     }
+  }
+  // Penanganan pembelian atau pemilihan trail
+  else if (item.startsWith('trail_')) {
+    const trailId = item.split('_')[1];
+    const selectedTrail = trails.find(trail => trail.id === trailId);
+
+    if (selectedTrail) {
+      if (selectedTrail.cost === 0) {
+        // Trail gratis, langsung pilih
+        localStorage.setItem('currentTrail', trailId);
+        currentTrailColor = selectedTrail.color;
+        successMessage = `You selected ${selectedTrail.name} Trail!`;
+        console.log(`Selected ${selectedTrail.name} Trail.`);
+      } else {
+        // Periksa apakah trail sudah dibeli
+        let purchasedTrails = JSON.parse(localStorage.getItem('purchasedTrails')) || [];
+        if (purchasedTrails.includes(trailId)) {
+          // Jika sudah dibeli, langsung pilih
+          localStorage.setItem('currentTrail', trailId);
+          currentTrailColor = selectedTrail.color;
+          successMessage = `You selected ${selectedTrail.name} Trail!`;
+          console.log(`Selected ${selectedTrail.name} Trail.`);
+        } else {
+          // Jika belum dibeli, coba beli
+          cost = selectedTrail.cost;
+          if (totalCoinsCollected >= cost) {
+            totalCoinsCollected -= cost;
+            coins -= cost;
+            purchasedTrails.push(trailId);
+            localStorage.setItem('purchasedTrails', JSON.stringify(purchasedTrails));
+            localStorage.setItem('currentTrail', trailId);
+            currentTrailColor = selectedTrail.color;
+            successMessage = `You purchased and selected ${selectedTrail.name} Trail!`;
+            console.log(`Purchased ${selectedTrail.name} Trail. Remaining coins: ${totalCoinsCollected}`);
+          }
+        }
+      }
+    } else {
+      console.log(`Trail with id ${trailId} not found.`);
+      return;
+    }
   } else {
     console.log(`Unknown item type: ${item}`);
     return;
@@ -645,8 +698,9 @@ function handlePurchase(item) {
   // Update displayed coin count setelah pembelian
   shopCoins.innerText = totalCoinsCollected;
 
-  // Re-inisialisasi skins untuk memperbarui status
+  // Re-inisialisasi skins dan trails untuk memperbarui status
   initializeSkins();
+  initializeTrails();
 }
 
 // Fungsi untuk inisialisasi skins yang sudah dibeli dan skin yang dipilih
@@ -689,11 +743,58 @@ function initializeSkins() {
   });
 }
 
+// Fungsi untuk inisialisasi trails yang sudah dibeli dan trail yang dipilih
+function initializeTrails() {
+  // Ambil trails yang sudah dibeli dari localStorage
+  const purchasedTrails = JSON.parse(localStorage.getItem('purchasedTrails')) || [];
+
+  // Ambil trail yang saat ini dipilih
+  const currentTrailId = localStorage.getItem('currentTrail') || 'default';
+  const currentTrail = trails.find(trail => trail.id === currentTrailId) || trails[0];
+  currentTrailColor = currentTrail.color;
+
+  // Tampilkan indikator trail yang sudah dibeli
+  shopItems.forEach(item => {
+    const itemType = item.getAttribute('data-item');
+    if (itemType.startsWith('trail_')) {
+      const trailId = itemType.split('_')[1];
+      const selectedTrail = trails.find(trail => trail.id === trailId);
+      if (selectedTrail) {
+        if (purchasedTrails.includes(trailId) || trailId === 'default') {
+          // Tampilkan sebagai sudah dibeli
+          item.classList.add('purchased');
+          // Cek apakah sudah ada label "Owned"
+          if (!item.querySelector('.owned-label')) {
+            const ownedLabel = document.createElement('span');
+            ownedLabel.classList.add('owned-label');
+            ownedLabel.innerText = 'Owned';
+            item.appendChild(ownedLabel);
+          }
+        } else {
+          // Jika belum dibeli, pastikan tidak ada label "Owned"
+          const ownedLabel = item.querySelector('.owned-label');
+          if (ownedLabel) {
+            ownedLabel.remove();
+          }
+          item.classList.remove('purchased');
+        }
+      }
+    }
+  });
+}
+
 // Fungsi untuk memuat skin yang dipilih saat game dimulai
 function loadCurrentSkin() {
   const currentSkinId = localStorage.getItem('currentSkin') || 'default';
   const currentSkin = skins.find(skin => skin.id === currentSkinId) || skins[0];
   player.color = currentSkin.color;
+}
+
+// Fungsi untuk memuat trail yang dipilih saat game dimulai
+function loadCurrentTrail() {
+  const currentTrailId = localStorage.getItem('currentTrail') || 'default';
+  const currentTrail = trails.find(trail => trail.id === currentTrailId) || trails[0];
+  currentTrailColor = currentTrail.color;
 }
 
 // Inisialisasi game untuk menampilkan menu utama
@@ -705,11 +806,13 @@ function initialize() {
   confirmationModal.style.display = 'none';
   gameOverScreen.style.display = 'none';
   
-  // Inisialisasi skins
+  // Inisialisasi skins dan trails
   initializeSkins();
+  initializeTrails();
 
-  // Muat skin yang dipilih
+  // Muat skin dan trail yang dipilih
   loadCurrentSkin();
+  loadCurrentTrail();
 }
 
 initialize();
