@@ -1,5 +1,5 @@
 Game: Biji Gelinding dan Loncat
-Platform: Playable for Mobile and Dekstop Devices
+Platform: Playable for Dekstop Only (Use Full Screen in your Browser)
 Version: (Beta 0.1)
 
 Important Messages:
