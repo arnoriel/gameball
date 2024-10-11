@@ -575,130 +575,134 @@ shopItems.forEach(item => {
 });
 
 // Fungsi untuk handle pembelian item di shop
+// Fungsi untuk handle pembelian item di shop
 function handlePurchase(item) {
   console.log(`Attempting to purchase: ${item}`);
   let cost = 0;
   let successMessage = '';
   let failureMessage = 'Not enough coins!';
 
+  // Menghapus status selected dari semua item sebelum memberikan status pada item yang dipilih
+  const allItems = document.querySelectorAll('.shopButton');
+  allItems.forEach(button => {
+      button.innerText = 'Select'; // Mengubah kembali teks menjadi "Select"
+  });
+
+  const selectedItemButton = document.querySelector(`.shopItem[data-item="${item}"] .shopButton`);
+
   if (item === 'jumpBoost') {
-    cost = 5;
-    if (totalCoinsCollected >= cost) {
-      totalCoinsCollected -= cost;
-      coins -= cost;
-      jumpStrength -= 5;  // Membuat loncatan lebih kuat
-      successMessage = 'You purchased Jump Boost!';
-      console.log(`Purchased Jump Boost. Remaining coins: ${totalCoinsCollected}`);
-    }
+      cost = 5;
+      if (totalCoinsCollected >= cost) {
+          totalCoinsCollected -= cost;
+          coins -= cost;
+          jumpStrength -= 5;  // Membuat loncatan lebih kuat
+          successMessage = 'You purchased Jump Boost!';
+          console.log(`Purchased Jump Boost. Remaining coins: ${totalCoinsCollected}`);
+          selectedItemButton.innerText = 'Selected'; // Ubah teks tombol menjadi "Selected"
+      }
   } else if (item === 'extraLife') {
-    cost = 10;
-    if (totalCoinsCollected >= cost) {
-      totalCoinsCollected -= cost;
-      coins -= cost;
-      // Tambahkan logika extra life di sini
-      successMessage = 'You purchased Extra Life!';
-      console.log(`Purchased Extra Life. Remaining coins: ${totalCoinsCollected}`);
-    }
+      cost = 10;
+      if (totalCoinsCollected >= cost) {
+          totalCoinsCollected -= cost;
+          coins -= cost;
+          // Tambahkan logika extra life di sini
+          successMessage = 'You purchased Extra Life!';
+          console.log(`Purchased Extra Life. Remaining coins: ${totalCoinsCollected}`);
+          selectedItemButton.innerText = 'Selected'; // Ubah teks tombol menjadi "Selected"
+      }
   } 
   // Penanganan pembelian atau pemilihan skin
   else if (item.startsWith('skin_')) {
-    const skinId = item.split('_')[1];
-    const selectedSkin = skins.find(skin => skin.id === skinId);
+      const skinId = item.split('_')[1];
+      const selectedSkin = skins.find(skin => skin.id === skinId);
 
-    if (selectedSkin) {
-      if (selectedSkin.cost === 0) {
-        // Skin gratis, langsung pilih
-        localStorage.setItem('currentSkin', skinId);
-        player.color = selectedSkin.color;
-        successMessage = `You selected ${selectedSkin.name}!`;
-        console.log(`Selected ${selectedSkin.name}.`);
-      } else {
-        // Periksa apakah skin sudah dibeli
-        let purchasedSkins = JSON.parse(localStorage.getItem('purchasedSkins')) || [];
-        if (purchasedSkins.includes(skinId)) {
-          // Jika sudah dibeli, langsung pilih
-          localStorage.setItem('currentSkin', skinId);
-          player.color = selectedSkin.color;
-          successMessage = `You selected ${selectedSkin.name}!`;
-          console.log(`Selected ${selectedSkin.name}.`);
-        } else {
-          // Jika belum dibeli, coba beli
-          cost = selectedSkin.cost;
-          if (totalCoinsCollected >= cost) {
-            totalCoinsCollected -= cost;
-            coins -= cost;
-            purchasedSkins.push(skinId);
-            localStorage.setItem('purchasedSkins', JSON.stringify(purchasedSkins));
-            localStorage.setItem('currentSkin', skinId);
-            player.color = selectedSkin.color;
-            successMessage = `You purchased and selected ${selectedSkin.name}!`;
-            console.log(`Purchased ${selectedSkin.name}. Remaining coins: ${totalCoinsCollected}`);
+      if (selectedSkin) {
+          if (selectedSkin.cost === 0) {
+              localStorage.setItem('currentSkin', skinId);
+              player.color = selectedSkin.color;
+              successMessage = `You selected ${selectedSkin.name}!`;
+              console.log(`Selected ${selectedSkin.name}.`);
+              selectedItemButton.innerText = 'Selected'; // Ubah teks tombol menjadi "Selected"
+          } else {
+              let purchasedSkins = JSON.parse(localStorage.getItem('purchasedSkins')) || [];
+              if (purchasedSkins.includes(skinId)) {
+                  localStorage.setItem('currentSkin', skinId);
+                  player.color = selectedSkin.color;
+                  successMessage = `You selected ${selectedSkin.name}!`;
+                  console.log(`Selected ${selectedSkin.name}.`);
+                  selectedItemButton.innerText = 'Selected'; // Ubah teks tombol menjadi "Selected"
+              } else {
+                  cost = selectedSkin.cost;
+                  if (totalCoinsCollected >= cost) {
+                      totalCoinsCollected -= cost;
+                      coins -= cost;
+                      purchasedSkins.push(skinId);
+                      localStorage.setItem('purchasedSkins', JSON.stringify(purchasedSkins));
+                      localStorage.setItem('currentSkin', skinId);
+                      player.color = selectedSkin.color;
+                      successMessage = `You purchased and selected ${selectedSkin.name}!`;
+                      console.log(`Purchased ${selectedSkin.name}. Remaining coins: ${totalCoinsCollected}`);
+                      selectedItemButton.innerText = 'Selected'; // Ubah teks tombol menjadi "Selected"
+                  }
+              }
           }
-        }
+      } else {
+          console.log(`Skin with id ${skinId} not found.`);
+          return;
       }
-    } else {
-      console.log(`Skin with id ${skinId} not found.`);
-      return;
-    }
   }
   // Penanganan pembelian atau pemilihan trail
   else if (item.startsWith('trail_')) {
-    const trailId = item.split('_')[1];
-    const selectedTrail = trails.find(trail => trail.id === trailId);
+      const trailId = item.split('_')[1];
+      const selectedTrail = trails.find(trail => trail.id === trailId);
 
-    if (selectedTrail) {
-      if (selectedTrail.cost === 0) {
-        // Trail gratis, langsung pilih
-        localStorage.setItem('currentTrail', trailId);
-        currentTrailColor = selectedTrail.color;
-        successMessage = `You selected ${selectedTrail.name} Trail!`;
-        console.log(`Selected ${selectedTrail.name} Trail.`);
-      } else {
-        // Periksa apakah trail sudah dibeli
-        let purchasedTrails = JSON.parse(localStorage.getItem('purchasedTrails')) || [];
-        if (purchasedTrails.includes(trailId)) {
-          // Jika sudah dibeli, langsung pilih
-          localStorage.setItem('currentTrail', trailId);
-          currentTrailColor = selectedTrail.color;
-          successMessage = `You selected ${selectedTrail.name} Trail!`;
-          console.log(`Selected ${selectedTrail.name} Trail.`);
-        } else {
-          // Jika belum dibeli, coba beli
-          cost = selectedTrail.cost;
-          if (totalCoinsCollected >= cost) {
-            totalCoinsCollected -= cost;
-            coins -= cost;
-            purchasedTrails.push(trailId);
-            localStorage.setItem('purchasedTrails', JSON.stringify(purchasedTrails));
-            localStorage.setItem('currentTrail', trailId);
-            currentTrailColor = selectedTrail.color;
-            successMessage = `You purchased and selected ${selectedTrail.name} Trail!`;
-            console.log(`Purchased ${selectedTrail.name} Trail. Remaining coins: ${totalCoinsCollected}`);
+      if (selectedTrail) {
+          if (selectedTrail.cost === 0) {
+              localStorage.setItem('currentTrail', trailId);
+              currentTrailColor = selectedTrail.color;
+              successMessage = `You selected ${selectedTrail.name} Trail!`;
+              console.log(`Selected ${selectedTrail.name} Trail.`);
+              selectedItemButton.innerText = 'Selected'; // Ubah teks tombol menjadi "Selected"
+          } else {
+              let purchasedTrails = JSON.parse(localStorage.getItem('purchasedTrails')) || [];
+              if (purchasedTrails.includes(trailId)) {
+                  localStorage.setItem('currentTrail', trailId);
+                  currentTrailColor = selectedTrail.color;
+                  successMessage = `You selected ${selectedTrail.name} Trail!`;
+                  console.log(`Selected ${selectedTrail.name} Trail.`);
+                  selectedItemButton.innerText = 'Selected'; // Ubah teks tombol menjadi "Selected"
+              } else {
+                  cost = selectedTrail.cost;
+                  if (totalCoinsCollected >= cost) {
+                      totalCoinsCollected -= cost;
+                      coins -= cost;
+                      purchasedTrails.push(trailId);
+                      localStorage.setItem('purchasedTrails', JSON.stringify(purchasedTrails));
+                      localStorage.setItem('currentTrail', trailId);
+                      currentTrailColor = selectedTrail.color;
+                      successMessage = `You purchased and selected ${selectedTrail.name} Trail!`;
+                      console.log(`Purchased ${selectedTrail.name} Trail. Remaining coins: ${totalCoinsCollected}`);
+                      selectedItemButton.innerText = 'Selected'; // Ubah teks tombol menjadi "Selected"
+                  }
+              }
           }
-        }
+      } else {
+          console.log(`Trail with id ${trailId} not found.`);
+          return;
       }
-    } else {
-      console.log(`Trail with id ${trailId} not found.`);
-      return;
-    }
   } else {
-    console.log(`Unknown item type: ${item}`);
-    return;
+      console.log(`Unknown item type: ${item}`);
+      return;
   }
 
   if (successMessage) {
-    alert(successMessage);
+      alert(successMessage);
   } else {
-    alert(failureMessage);
+      alert(failureMessage);
   }
 
-  // Update totalCoinsCollected di localStorage setelah pembelian
   localStorage.setItem('totalCoinsCollected', totalCoinsCollected);
-
-  // Update displayed coin count setelah pembelian
   shopCoins.innerText = totalCoinsCollected;
-
-  // Re-inisialisasi skins dan trails untuk memperbarui status
   initializeSkins();
   initializeTrails();
 }
